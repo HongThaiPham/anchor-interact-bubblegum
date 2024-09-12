@@ -34,11 +34,11 @@ pub mod anchor_interact_bubblegum {
 
     pub fn create_collection(
         ctx: Context<CreateCollection>,
-        id: u64,
+        cid: u64,
         name: String,
         symbol: String,
         uri: String,
     ) -> Result<()> {
-        ctx.accounts.handler(id, name, symbol, uri)
+        ctx.accounts.handler(cid, name, symbol, uri)
     }
 }

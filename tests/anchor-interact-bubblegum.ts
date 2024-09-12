@@ -93,22 +93,22 @@ describe("anchor-interact-bubblegum", () => {
     const uri = "https://example.com/my-collection-cNft.json";
     const symbol = "cNFT1";
     const name = "My Collection cNFT 1";
-    const id = `collection_${collectionId}`;
-    let hexString = crypto
-      .createHash("sha256")
-      .update(id, "utf-8")
-      .digest("hex");
-    let seed = Uint8Array.from(Buffer.from(hexString, "hex"));
-    // const id = new anchor.BN(1);
+    // const id = `collection_${collectionId}`;
+    // let hexString = crypto
+    //   .createHash("sha256")
+    //   .update(id, "utf-8")
+    //   .digest("hex");
+    // let seed = Uint8Array.from(Buffer.from(hexString, "hex"));
     // const [collectionMint] = PublicKey.findProgramAddressSync(
-    //   [Buffer.from(`collection`), id.toArrayLike(Buffer, "le", 8)],
+    //   [seed],
     //   program.programId
     // );
-
+    const id = new anchor.BN(1);
     const [collectionMint] = PublicKey.findProgramAddressSync(
-      [seed],
+      [Buffer.from(`collection`), id.toArrayLike(Buffer, "le", 8)],
       program.programId
     );
+
     const tx = await program.methods
       .createCollection(id, name, symbol, uri)
       .accountsPartial({

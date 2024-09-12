@@ -6,14 +6,15 @@ use anchor_spl::metadata::mpl_token_metadata::{
 use crate::{error::BubblegumErrorCode, Collection};
 
 #[derive(Accounts)]
-#[instruction(id: String)]
+#[instruction(cid: u64)]
 pub struct CreateCollection<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
     #[account(
       init,
       payer = payer,
-      seeds = [&solana_program::hash::hash(id.as_bytes()).to_bytes()],
+      seeds = [b"collection", cid.to_le_bytes().as_ref()],
+    //   seeds = [&solana_program::hash::hash(cid.as_bytes()).to_bytes()],
       bump,
       space = 8 + Collection::INIT_SPACE
     )]
@@ -22,8 +23,8 @@ pub struct CreateCollection<'info> {
 }
 
 impl<'info> CreateCollection<'info> {
-    pub fn handler(&mut self, id: String, name: String, symbol: String, uri: String) -> Result<()> {
-        msg!("CreateCollection! {:?}", id);
+    pub fn handler(&mut self, cid: u64, name: String, symbol: String, uri: String) -> Result<()> {
+        msg!("CreateCollection! {:?}", cid);
 
         require!(uri.len() <= MAX_URI_LENGTH, BubblegumErrorCode::UriTooLong);
 
